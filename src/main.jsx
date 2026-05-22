@@ -9,7 +9,6 @@ import {
   FileCheck2,
   Mail,
   Menu,
-  MessageSquareText,
   Moon,
   SearchCheck,
   Send,
@@ -33,55 +32,52 @@ const buildCommitDate = import.meta.env.VITE_COMMIT_DATE || 'lokale build';
 const buildCommitLabel = buildCommit === 'local' ? buildCommit : buildCommit.slice(0, 7);
 
 const navItems = [
-  ['probleem', 'Probleem'],
+  ['wat-we-doen', 'Wat we doen'],
   ['voor-wie', 'Voor wie'],
-  ['delivery-node', 'Delivery Node'],
+  ['waarom-nu', 'Waarom nu'],
   ['aanbod', 'Aanbod'],
   ['voorbeelden', 'Voorbeelden'],
   ['intake', 'Intake']
 ];
 
-const frictions = [
-  ['Zoeken', 'Kennis staat in mappen, mailboxen, hoofden en losse bestanden.', SearchCheck],
-  ['Overtypen', 'Medewerkers verplaatsen dezelfde informatie tussen formulieren, lijsten en systemen.', ClipboardCheck],
-  ['Controleren', 'Documenten, dossiers en uitzonderingen vragen steeds dezelfde aandacht.', FileCheck2],
-  ['Opvolgen', 'Werk blijft hangen tussen mensen, systemen of afdelingen.', Workflow],
-  ['Samenvatten', 'Iedere week verdwijnen uren in rapportages, updates en klantantwoorden.', MessageSquareText],
-  ['Rapporteren', 'Grip vraagt spreadsheets, handmatige statusrondes en veel nabellen.', BarChart3]
+const whatWeDo = [
+  ['Maatwerk apps', 'Praktische webapplicaties die precies aansluiten op hoe uw organisatie werkt.', Blocks],
+  ['Slimme koppelingen', 'Systemen, formulieren, documenten en data beter met elkaar laten samenwerken.', Workflow],
+  ['Dashboards', 'Overzicht in voortgang, werkvoorraad, uitzonderingen en opvolging.', BarChart3],
+  ['Documenthulpen', 'Informatie sneller controleren, samenvatten en klaarmaken voor vervolgwerk.', FileCheck2],
+  ['Klantintakes', 'Aanvragen compleet binnenhalen en direct goed doorzetten naar de juiste stap.', UsersRound],
+  ['Automatisering', 'Terugkerende handelingen verminderen waar dat veilig en zinvol is.', ClipboardCheck]
 ];
 
 const audienceSignals = [
-  'Veel standaard en repeterend werk',
-  'Documenten, dossiers, formulieren of klantvragen bepalen de dag',
-  'Kennis zit verspreid in mensen, mappen en losse tools',
-  'Medewerkers zoeken, controleren, kopieren of volgen veel handmatig op',
-  'AI is interessant, maar concrete waarde is belangrijker dan hype',
-  'Er is weinig ruimte voor een groot IT- of consultancytraject'
+  'U ziet kansen om werk slimmer en overzichtelijker te maken',
+  'U wilt geen groot IT-traject om een praktische oplossing te krijgen',
+  'Uw organisatie werkt met veel documenten, dossiers, formulieren of klantvragen',
+  'Er zijn terugkerende handelingen die eenvoudiger kunnen',
+  'U zoekt ervaren softwaremensen die ook de praktijk begrijpen',
+  'U wilt snel zien of een idee waarde heeft voordat u groot investeert'
 ];
 
-const deliverySteps = [
-  ['Intake', 'Het proces, doel en succescriterium worden scherp gemaakt.'],
-  ['UX Design', 'We vertalen het werk naar schermen, stappen en interacties.'],
-  ['Backlog', 'De oplossing wordt opgeknipt in duidelijke taken en acceptatiecriteria.'],
-  ['Bouw', 'AI-agents en ontwikkelautomatisering versnellen het maken van software.'],
-  ['Tests', 'Functionele, visuele, veiligheids- en kwaliteitschecks lopen mee.'],
-  ['Review', 'RD Workx controleert kwaliteit; de klant geeft richting en feedback.'],
-  ['DEV/TEST', 'De oplossing komt in een testomgeving om te proberen en te beoordelen.'],
-  ['Rapportage', 'Voortgang, keuzes, tests en vervolgstappen worden inzichtelijk.']
+const buildSteps = [
+  ['Scherp krijgen', 'We maken samen duidelijk wat de oplossing moet doen en wanneer het waarde heeft.'],
+  ['Ontwerpen', 'We vertalen het idee naar een logische, eenvoudige manier van werken.'],
+  ['Bouwen', 'Met moderne ontwikkeltechnologie maken we snel een werkende eerste versie.'],
+  ['Testen', 'We controleren of het klopt, veilig is en past bij de dagelijkse praktijk.'],
+  ['Opleveren', 'Wat goed werkt, maken we betrouwbaar bruikbaar voor dagelijks gebruik.']
 ];
 
 const offers = [
   {
-    title: 'AI Delivery Abonnement',
+    title: 'Software abonnement',
     label: 'Gespreid investeren',
-    text: 'Voor een helder afgebakende procesoplossing. De eerste waarde wordt snel zichtbaar, daarna blijft de oplossing draaien en verbeteren binnen afgesproken scope.',
-    points: ['Korte AI Delivery-cycles', 'Continuiteit en kleine verbeteringen', 'Heldere scope en maandbedrag']
+    text: 'Voor een helder afgebakende oplossing. De eerste waarde wordt snel zichtbaar, daarna blijft de software draaien en verbeteren binnen afgesproken grenzen.',
+    points: ['Snel een eerste werkende versie', 'Continuiteit en kleine verbeteringen', 'Heldere scope en maandbedrag']
   },
   {
-    title: 'AI Delivery Sprint',
+    title: 'Slimme Start',
     label: 'Slimme Start',
-    text: 'Een kort traject om het proces scherp te krijgen en te vertalen naar UX, backlog en een eerste werkende versie. Ideaal wanneer waarde eerst bewezen moet worden.',
-    points: ['Procesanalyse en UX', 'Backlog met acceptatiecriteria', 'Eerste werkende versie']
+    text: 'Een kort traject om een idee of werkwijze scherp te krijgen en om te zetten naar een eerste werkende versie. Ideaal wanneer waarde eerst bewezen moet worden.',
+    points: ['Doel en werkwijze scherp', 'Duidelijke keuzes en grenzen', 'Eerste werkende versie']
   },
   {
     title: 'Maatwerkrealisatie',
@@ -109,9 +105,9 @@ const examples = [
 ];
 
 const principles = [
-  ['Proces eerst', 'We starten bij hoe het werk echt loopt, niet bij een tool of trend.'],
+  ['Ervaring eerst', 'Jarenlange softwarepraktijk helpt om snel het verschil te zien tussen handig en onverstandig.'],
   ['Klein beginnen', 'Eerst bewijzen waar waarde zit. Daarna pas groter maken.'],
-  ['Controle houden', 'AI versnelt de bouw; RD Workx bewaakt kwaliteit, veiligheid en resultaat.'],
+  ['Modern bouwen', 'Nieuwe ontwikkeltechnologie maakt software sneller en betaalbaarder, zonder het vakmanschap overboord te gooien.'],
   ['Eerlijk kiezen', 'Als iets niets oplevert, moet je het niet bouwen. Zo simpel mag het zijn.']
 ];
 
@@ -148,7 +144,7 @@ function saveTheme(theme) {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
-  const [activeSection, setActiveSection] = useState('probleem');
+  const [activeSection, setActiveSection] = useState('wat-we-doen');
   const headerLogoSrc = theme === 'dark' ? logoDarkFullSrc : logoLightFullSrc;
   const footerLogoSrc = logoDarkFullSrc;
   const contactMonogramSrc = theme === 'dark' ? monogramDarkSrc : monogramLightSrc;
@@ -232,31 +228,31 @@ function App() {
         <section className="hero">
           <div className="hero-content">
             <div className="hero-copy">
-              <span className="section-label">Voor procesrijk MKB</span>
+              <span className="section-label">Ervaren softwarebouwers voor het MKB</span>
               <h1>
-                <span>Stop met tijd</span>
-                <span>verliezen aan</span>
-                <span>standaardwerk.</span>
+                <span>Slimmer werken.</span>
+                <span>Gewoon geregeld.</span>
               </h1>
               <p>
-                RD Workx helpt organisaties om repeterend, foutgevoelig werk slimmer te organiseren
-                met werkende maatwerksoftware. U kent uw werk. Wij helpen het slimmer regelen.
+                RD Workx bouwt praktische maatwerksoftware voor MKB-bedrijven die sneller,
+                overzichtelijker en betaalbaarder willen werken. Zeer ervaren softwarebouwers,
+                gecombineerd met een moderne manier van bouwen.
               </p>
               <div className="actions">
                 <a className="button primary" href="#intake">Plan gratis intake <ArrowRight size={18} /></a>
-                <a className="button secondary dark-button" href="#delivery-node">Bekijk de Delivery Node</a>
+                <a className="button secondary dark-button" href="#wat-we-doen">Bekijk wat we maken</a>
               </div>
-              <p className="subline">Apps zijn gereedschap. Het doel is beter werk.</p>
+              <p className="subline">Geen groot IT-traject. Geen hype. Wel werkende oplossingen.</p>
             </div>
 
-            <div className="hero-panel" aria-label="AI Delivery Node overzicht">
+            <div className="hero-panel" aria-label="RD Workx aanpak overzicht">
               <div className="panel-header">
                 <span className="status-dot" />
-                <span>AI Delivery Node</span>
+                <span>Nieuwe manier van software bouwen</span>
               </div>
-              <h2>U bepaalt de koers. AI versnelt de bouw. RD Workx zorgt dat het klopt.</h2>
+              <h2>Software die vroeger te duur of te traag was, wordt nu haalbaar.</h2>
               <div className="node-flow">
-                {deliverySteps.slice(0, 4).map(([title], index) => (
+                {buildSteps.slice(0, 4).map(([title], index) => (
                   <div className="node-pill" key={title}>
                     <strong>{String(index + 1).padStart(2, '0')}</strong>
                     <span>{title}</span>
@@ -269,25 +265,25 @@ function App() {
                   <span>eerste waarde zichtbaar</span>
                 </div>
                 <div>
-                  <strong>Scope eerst</strong>
-                  <span>geen losse beloftes</span>
+                  <strong>Ervaring telt</strong>
+                  <span>softwaremensen aan het stuur</span>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="probleem" className="section problem-section">
+        <section id="wat-we-doen" className="section problem-section">
           <div className="section-intro left">
-            <span className="section-label">Probleem</span>
-            <h2>Het werk loopt niet vast op grote ideeën, maar op kleine stappen die elke week terugkomen.</h2>
+            <span className="section-label">Wat we doen</span>
+            <h2>Wij maken software die werk makkelijker maakt.</h2>
             <p>
-              Processen groeien organisch. Mensen worden handig met omwegen. Voor je het weet kost
-              standaardwerk meer aandacht dan het eigenlijke vakwerk.
+              Apps, koppelingen, dashboards en automatiseringen. Niet als doel op zich,
+              maar als praktische oplossing voor werk dat sneller, eenvoudiger of overzichtelijker kan.
             </p>
           </div>
           <div className="friction-grid">
-            {frictions.map(([title, text, Icon]) => (
+            {whatWeDo.map(([title, text, Icon]) => (
               <article className="rdw-card friction-card" key={title}>
                 <span className="icon-token"><Icon size={22} /></span>
                 <h3>{title}</h3>
@@ -300,10 +296,11 @@ function App() {
         <section id="voor-wie" className="section audience-section">
           <div className="audience-copy">
             <span className="section-label">Voor wie</span>
-            <h2>Voor organisaties die te groot zijn voor handwerk en te praktisch voor grote IT-trajecten.</h2>
+            <h2>Voor MKB-bedrijven die iets slimmer willen regelen, zonder meteen een groot IT-project te starten.</h2>
             <p>
-              RD Workx past bij procesrijke MKB-organisaties die weten dat er winst zit in hun
-              dagelijkse werk, maar hulp nodig hebben om dat scherp te maken en goed op te lossen.
+              Vaak weet u prima waar kansen liggen. Een intake die handiger kan. Een dashboard dat mist.
+              Een koppeling die steeds handwerk vraagt. Een proces dat overzichtelijker kan.
+              Wij helpen om daar iets werkends van te maken.
             </p>
           </div>
           <div className="audience-list">
@@ -316,17 +313,18 @@ function App() {
           </div>
         </section>
 
-        <section id="delivery-node" className="section delivery-section">
+        <section id="waarom-nu" className="section delivery-section">
           <div className="delivery-intro">
-            <span className="section-label">AI Delivery Node</span>
-            <h2>Snel bouwen kan alleen verantwoord als de route gecontroleerd is.</h2>
+            <span className="section-label">Waarom nu</span>
+            <h2>Software bouwen verandert. Maar goede software vraagt nog steeds om ervaring.</h2>
             <p>
-              De AI Delivery Node is onze werkwijze en ontwikkelomgeving. AI-agents helpen versnellen,
-              maar intake, UX, backlog, tests, review en rapportage houden het werk toetsbaar.
+              We kennen en gebruikten door de jaren heen veel verschillende technologieën, talen, platformen en manieren
+              van bouwen. Daardoor kunnen we de huidige stand van AI en techniek nuchter duiden: wat is bruikbaar,
+              wat is ruis en wat levert in de praktijk echt iets op.
             </p>
           </div>
           <div className="delivery-grid">
-            {deliverySteps.map(([title, text], index) => (
+            {buildSteps.map(([title, text], index) => (
               <article className="delivery-card" key={title}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <h3>{title}</h3>
@@ -339,10 +337,11 @@ function App() {
         <section className="section proof-section">
           <div className="proof-copy">
             <span className="section-label">Onze rol</span>
-            <h2>Software wordt sneller en goedkoper. De kunst is weten wat je moet bouwen.</h2>
+            <h2>De techniek is sneller geworden. De kunst blijft weten wat je moet bouwen.</h2>
             <p>
-              We starten niet bij technologie. Eerst begrijpen we het proces, de mensen en de momenten
-              waarop werk stokt. Daarna bouwen we alleen wat genoeg waarde heeft om dagelijks gebruikt te worden.
+              Nieuwe technologie maakt veel mogelijk, maar ervaring bepaalt of het ook bruikbaar,
+              veilig en onderhoudbaar wordt. Dat is waar RD Workx waarde toevoegt:
+              nuchter kijken, slim bouwen en gewoon opleveren.
             </p>
             <div className="principle-grid">
               {principles.map(([title, text]) => (
@@ -364,8 +363,8 @@ function App() {
             <span className="section-label">Aanbod</span>
             <h2>Drie routes. Eerst kijken wat verantwoord past.</h2>
             <p>
-              De instap is een gratis intake. Daarna kiezen we een route die past bij het proces,
-              de scope, de risico’s en hoe snel uw organisatie feedback kan geven.
+              De instap is een gratis intake. Daarna kiezen we een route die past bij uw vraag,
+              de omvang van de oplossing en hoe snel u iets werkends wilt zien.
             </p>
           </div>
           <div className="offer-grid">
@@ -389,8 +388,8 @@ function App() {
             <span className="section-label">Geschiktheidscheck</span>
             <h2>Niet alles hoeft gebouwd te worden.</h2>
             <p>
-              Lage maandprijzen zijn alleen gezond als de scope scherp is. Daarom kijken we vooraf
-              naar procesgrenzen, data, risico’s, complexiteit en feedbacksnelheid.
+              Een oplossing moet iets opleveren. Daarom kijken we vooraf naar omvang, data,
+              afhankelijkheden, risico’s en wat een eerste versie concreet moet bewijzen.
             </p>
           </div>
           <div className="fit-panel">
@@ -409,8 +408,8 @@ function App() {
         <section id="voorbeelden" className="section examples-section">
           <div className="section-intro">
             <span className="section-label">Voorbeelden</span>
-            <h2>Apps zijn geen productcatalogus. Ze zijn de uitkomst van een scherp procesprobleem.</h2>
-            <p>Een paar vormen die vaak logisch zijn als standaardwerk slimmer georganiseerd moet worden.</p>
+            <h2>Een paar voorbeelden van wat wij kunnen maken.</h2>
+            <p>De vorm verschilt per bedrijf. Het doel blijft hetzelfde: werk eenvoudiger maken.</p>
           </div>
           <div className="example-grid">
             {examples.map(([title, text, Icon]) => (
@@ -427,10 +426,10 @@ function App() {
           <img src={problemVisualSrc} alt="Samen werken aan een praktische procesoplossing" />
           <div>
             <span className="section-label">Gewoon aanpakken</span>
-            <h2>Eerst snappen waar tijd verdwijnt. Daarna pas slim versnellen.</h2>
+            <h2>Een goed idee hoeft geen groot project te worden.</h2>
             <p>
-              De beste software voelt niet als extra systeem. Het sluit aan op hoe mensen werken,
-              haalt ruis weg en maakt duidelijk wat de volgende stap is.
+              Vaak begint het met één concrete wens: dit moet toch makkelijker kunnen.
+              Daar maken wij iets tastbaars van, zodat u snel ziet of het werkt.
             </p>
           </div>
         </section>
@@ -439,10 +438,10 @@ function App() {
           <div className="contact-copy">
             <img src={contactMonogramSrc} alt="" aria-hidden="true" />
             <span className="section-label">Gratis intake</span>
-            <h2>Welk standaardwerk kost u elke week onnodig tijd?</h2>
+            <h2>Heeft u iets waarvan u denkt: dit moet slimmer kunnen?</h2>
             <p>
-              Beschrijf één proces, taak of terugkerend probleem. Tijdens de intake maken we concreet
-              wat slimmer kan, welke route logisch is en waar u beter niet aan moet beginnen.
+              Vertel ons kort wat u wilt verbeteren. Tijdens de intake kijken we wat haalbaar is,
+              welke route logisch is en hoe snel we iets werkends kunnen laten zien.
             </p>
             <a className="mail-link" href="mailto:hallo@rdworkx.nl"><Mail size={18} /> hallo@rdworkx.nl</a>
           </div>
@@ -450,7 +449,7 @@ function App() {
             <label>Naam<input type="text" name="name" autoComplete="name" /></label>
             <label>Bedrijf<input type="text" name="company" autoComplete="organization" /></label>
             <label>E-mail<input type="email" name="email" autoComplete="email" /></label>
-            <label>Welk proces moet slimmer?<textarea name="message" rows="5" /></label>
+            <label>Wat wilt u slimmer regelen?<textarea name="message" rows="5" /></label>
             <button className="button primary" type="submit">Plan gratis intake <Send size={16} /></button>
           </form>
         </section>
@@ -465,7 +464,7 @@ function App() {
             <a href={`#${id}`} key={id}>{label}</a>
           ))}
         </div>
-        <p className="footer-note">Van procesprobleem naar werkende maatwerksoftware.</p>
+        <p className="footer-note">Ervaren softwarebouwers. Moderne aanpak. Gewoon geregeld.</p>
       </footer>
 
       <aside className="build-info" aria-label="Buildinformatie" tabIndex="0">
