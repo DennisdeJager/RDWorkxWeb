@@ -1,0 +1,17 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F2F3F5"/>
+  <defs>
+    <linearGradient id="beam" x1="164" y1="760" x2="1474" y2="184" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F6EB8" stop-opacity="0"/>
+      <stop offset=".50" stop-color="#6D35B2" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#1475D1" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="smallGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#242134" stroke-opacity=".045"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#smallGrid)"/>
+  <path d="M-80 820C230 670 355 730 572 560C754 416 890 250 1127 262C1348 273 1470 430 1710 345" stroke="url(#beam)" stroke-width="88" stroke-linecap="round"/>
+  <circle cx="1195" cy="288" r="172" fill="#8A22C8" fill-opacity=".07"/>
+  <circle cx="422" cy="703" r="212" fill="#1F6EB8" fill-opacity=".07"/>
+</svg>

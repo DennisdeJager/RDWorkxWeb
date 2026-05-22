@@ -1,0 +1,33 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="#0B0D12"/>
+  <defs>
+    <radialGradient id="violetGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1360 305) rotate(135) scale(760 420)">
+      <stop stop-color="#8A22C8" stop-opacity=".72"/>
+      <stop offset=".58" stop-color="#6D35B2" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#0B0D12" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blueGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(475 820) rotate(-28) scale(780 360)">
+      <stop stop-color="#1475D1" stop-opacity=".62"/>
+      <stop offset=".62" stop-color="#183B73" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#0B0D12" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lineGradient" x1="260" y1="790" x2="1760" y2="235" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F6EB8" stop-opacity=".15"/>
+      <stop offset=".45" stop-color="#6D35B2" stop-opacity=".82"/>
+      <stop offset="1" stop-color="#1475D1" stop-opacity=".18"/>
+    </linearGradient>
+    <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="36"/>
+    </filter>
+    <pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path d="M52 0H0V52" stroke="#ECEEF2" stroke-opacity=".045"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <path d="M-140 910C186 734 349 837 573 639C772 464 856 221 1139 236C1398 250 1522 465 2060 250" stroke="url(#lineGradient)" stroke-width="140" stroke-linecap="round" filter="url(#softBlur)" opacity=".74"/>
+  <path d="M-130 905C190 724 356 822 578 628C779 452 861 218 1139 231C1395 243 1527 459 2058 240" stroke="url(#lineGradient)" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>
+  <path d="M-110 980C230 794 420 845 646 676C850 523 925 364 1168 357C1430 350 1563 523 2050 315" stroke="#ECEEF2" stroke-opacity=".08" stroke-width="1.5"/>
+  <path d="M-95 820C210 662 365 705 577 523C779 350 935 166 1198 196C1428 222 1587 392 2060 160" stroke="#1475D1" stroke-opacity=".14" stroke-width="1.5"/>
+  <rect width="1920" height="1080" fill="url(#violetGlow)"/>
+  <rect width="1920" height="1080" fill="url(#blueGlow)"/>
+</svg>

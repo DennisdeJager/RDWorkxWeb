@@ -1,0 +1,48 @@
+services:
+  web:
+    image: ${IMAGE_REF:-rdworkxwebsite:local}
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: ${WEB_INTERNAL_PORT:-5175}
+      APP_ENV: ${APP_ENV:-dev}
+      PUBLIC_URL: ${PUBLIC_URL:-https://rdworkx.nl}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      DATABASE_URL: postgres://${POSTGRES_USER:-sg}:${POSTGRES_PASSWORD:-rdworkxwebsite_dev}@postgres:5432/${POSTGRES_DB:-rdworkxwebsite}
+    ports:
+      - "${WEB_PORT:-5175}:${WEB_INTERNAL_PORT:-5175}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - appdata:/app/data
+      - uploads:/app/uploads
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-rdworkxwebsite}
+      POSTGRES_USER: ${POSTGRES_USER:-sg}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rdworkxwebsite_dev}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER:-sg}\" -d \"$${POSTGRES_DB:-rdworkxwebsite}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - backups:/backups
+
+volumes:
+  appdata:
+  uploads:
+  postgres-data:
+  backups:

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rdworkx.nl/sitemap.xml
+Host: rdworkx.nl

@@ -1,0 +1,34 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="#FFFFFF"/>
+  <defs>
+    <radialGradient id="blueWash" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(510 822) rotate(-21) scale(780 420)">
+      <stop stop-color="#1F6EB8" stop-opacity=".20"/>
+      <stop offset=".65" stop-color="#1475D1" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="violetWash" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1410 275) rotate(142) scale(720 410)">
+      <stop stop-color="#8A22C8" stop-opacity=".18"/>
+      <stop offset=".62" stop-color="#6D35B2" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="flow" x1="245" y1="810" x2="1705" y2="215" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F6EB8" stop-opacity=".12"/>
+      <stop offset=".42" stop-color="#6D35B2" stop-opacity=".36"/>
+      <stop offset="1" stop-color="#1475D1" stop-opacity=".12"/>
+    </linearGradient>
+    <pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path d="M52 0H0V52" stroke="#242134" stroke-opacity=".045"/>
+    </pattern>
+    <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="#F2F3F5" opacity=".65"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <path d="M-170 915C160 735 352 825 580 630C782 456 872 220 1142 232C1399 243 1535 458 2070 226" stroke="url(#flow)" stroke-width="132" stroke-linecap="round" filter="url(#blur)"/>
+  <path d="M-145 908C174 728 356 816 581 624C782 452 874 223 1140 233C1390 243 1537 454 2060 231" stroke="#6D35B2" stroke-opacity=".30" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M-120 790C222 646 395 695 620 510C804 359 946 177 1204 202C1432 224 1596 392 2060 160" stroke="#1F6EB8" stroke-opacity=".15" stroke-width="1.5"/>
+  <path d="M-96 980C234 802 436 850 660 684C850 544 940 370 1169 362C1428 353 1570 528 2050 322" stroke="#242134" stroke-opacity=".08" stroke-width="1.5"/>
+  <rect width="1920" height="1080" fill="url(#blueWash)"/>
+  <rect width="1920" height="1080" fill="url(#violetWash)"/>
+</svg>

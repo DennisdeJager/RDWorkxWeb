@@ -1,0 +1,35 @@
+# R&D Workx
+
+> R&D Workx helpt bedrijven en organisaties om praktische procesproblemen op te lossen, processen slimmer te maken en sneller resultaat te boeken. AI is niet het doel, maar de versneller.
+
+## Website
+
+- [Homepage](https://rdworkx.nl/): overzicht van propositie, aanpak, voorbeelden, prijzen, bestaande tools en contact.
+- [Sitemap](https://rdworkx.nl/sitemap.xml): crawlbare URL-index.
+- [Robots](https://rdworkx.nl/robots.txt): crawlerregels.
+
+## Kernboodschap
+
+R&D Workx bouwt praktische oplossingen voor echte problemen. Denk aan klant-intake-assistenten, documentcheckers, interne kennisbanken, rapportagegenerators, slimme checklists, AI-assistenten voor klantvragen, procesdashboards en workflow-automatisering.
+
+## Aanpak
+
+1. Verkennen: praktijk, processen en knelpunten begrijpen.
+2. Waardescenario's bepalen: twee of drie concrete plekken kiezen waar snel waarde zit.
+3. Werkend concept bouwen: snel iets bruikbaars maken.
+4. Waarde toetsen: controleren of het tijd bespaart, fouten vermindert en mensen helpt.
+5. Productie en continuiteit: waardevolle concepten betrouwbaar doorbouwen en laten draaien.
+
+## Aanbod
+
+- Slimme Start: eenmalige analyse en eerste werkend concept.
+- Productierealisatie: gevalideerd concept omzetten naar productiegeschikte oplossing.
+- Zeker: continuiteit, hosting, monitoring, backups en updates.
+- Slimmer: continuiteit plus kleine verbeteringen en optimalisatie.
+- Vooruit: actieve doorontwikkeling, procesverbetering en adoptie.
+
+## Contact
+
+- E-mail: hallo@rdworkx.nl
+- Primaire taal: Nederlands
+- Regio: Nederland

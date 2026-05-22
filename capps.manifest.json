@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "appId": "rdworkxwebsite",
+  "displayName": "R&D Workx Website",
+  "repo": "DennisdeJager/RDWorkxWebsite",
+  "services": {
+    "web": {
+      "type": "web",
+      "internalPort": 5175,
+      "public": true,
+      "healthPath": "/health"
+    },
+    "postgres": {
+      "type": "postgres",
+      "public": false
+    }
+  },
+  "requiredVariables": [],
+  "requiredSecrets": [],
+  "dependencies": []
+}
