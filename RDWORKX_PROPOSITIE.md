@@ -129,7 +129,7 @@ Daarna zijn er drie mogelijke routes.
 
 Een abonnement voor een afgebakende procesoplossing, waarbij de investering wordt gespreid over een langere looptijd.
 
-Dit past bij MKB-organisaties die liever een overzichtelijk maandbedrag betalen dan een groot bedrag vooraf. De eerste waarde moet snel zichtbaar worden, meestal binnen 2 tot 6 weken via een korte AI Delivery-cycle.
+Dit past bij MKB-organisaties die liever een overzichtelijk maandbedrag betalen dan een groot bedrag vooraf. De eerste waarde moet snel zichtbaar worden: supersnel resultaat, snel iets werkends op tafel.
 
 Het abonnement dekt een afgesproken oplossing binnen duidelijke scope, plus continuiteit, monitoring, kleine verbeteringen en ondersteuning binnen afgesproken grenzen.
 

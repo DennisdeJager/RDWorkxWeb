@@ -261,8 +261,8 @@ function App() {
               </div>
               <div className="panel-metrics">
                 <div>
-                  <strong>2-6 weken</strong>
-                  <span>eerste waarde zichtbaar</span>
+                  <strong>Supersnel resultaat</strong>
+                  <span>snel iets werkends op tafel</span>
                 </div>
                 <div>
                   <strong>Ervaring telt</strong>
