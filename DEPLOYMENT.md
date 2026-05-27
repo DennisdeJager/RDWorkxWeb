@@ -64,6 +64,7 @@ Benodigde configuratie per ALM-omgeving:
 - `CONTACT_TO`: interne ontvanger van intake-aanvragen.
 
 Zonder Turnstile secret of SMTP-configuratie retourneert `/api/contact` bewust `503` en wordt er geen bericht verstuurd.
+De compose-deploy leest deze waarden uit de `.env` van de betreffende ALM-omgeving en geeft ze door aan de webcontainer.
 
 
 ## Verwachte deploy workflow op LXC

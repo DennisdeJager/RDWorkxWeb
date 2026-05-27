@@ -11,6 +11,16 @@ services:
       PUBLIC_URL: ${PUBLIC_URL:-https://rdworkx.nl}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
+      TURNSTILE_ALLOWED_HOSTNAMES: ${TURNSTILE_ALLOWED_HOSTNAMES:-www-dev.rdworkx.nl,rdworkx.nl,www.rdworkx.nl}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      CONTACT_FROM: ${CONTACT_FROM:-}
+      CONTACT_TO: ${CONTACT_TO:-}
       DATABASE_URL: postgres://${POSTGRES_USER:-sg}:${POSTGRES_PASSWORD:-rdworkxwebsite_dev}@postgres:5432/${POSTGRES_DB:-rdworkxwebsite}
     ports:
       - "${WEB_PORT:-5175}:${WEB_INTERNAL_PORT:-5175}"
