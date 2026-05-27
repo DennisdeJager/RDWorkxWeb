@@ -72,6 +72,120 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+function getAppEnv() {
+  return String(process.env.APP_ENV || process.env.NODE_ENV || 'dev').trim().toLowerCase();
+}
+
+function redactSecretValues(value) {
+  const secrets = [
+    process.env.SMTP_PASS,
+    process.env.TURNSTILE_SECRET_KEY,
+    process.env.OPENAI_API_KEY
+  ].filter(Boolean);
+
+  return secrets.reduce(
+    (current, secret) => current.replaceAll(secret, '[redacted]'),
+    String(value || '')
+  );
+}
+
+function smtpConfigSummary() {
+  return {
+    contactFromSet: Boolean(process.env.CONTACT_FROM || process.env.SMTP_USER),
+    contactToSet: Boolean(process.env.CONTACT_TO),
+    smtpHost: process.env.SMTP_HOST || '',
+    smtpPassSet: Boolean(process.env.SMTP_PASS),
+    smtpPort: process.env.SMTP_PORT || '587',
+    smtpSecure: String(process.env.SMTP_SECURE || '').toLowerCase() === 'true',
+    smtpUserSet: Boolean(process.env.SMTP_USER),
+    turnstileAllowedHostnames: process.env.TURNSTILE_ALLOWED_HOSTNAMES || '',
+    turnstileSecretSet: Boolean(process.env.TURNSTILE_SECRET_KEY),
+    turnstileSiteKeySet: Boolean(process.env.TURNSTILE_SITE_KEY || process.env.VITE_TURNSTILE_SITE_KEY)
+  };
+}
+
+function classifyServerError(error) {
+  const text = `${error.code || ''} ${error.command || ''} ${error.responseCode || ''} ${error.response || ''} ${error.message || ''}`;
+
+  if (/turnstile|captcha/i.test(text)) {
+    return 'captcha_verification_error';
+  }
+
+  if (/535|534|EAUTH|Username and Password|Application-specific password/i.test(text)) {
+    return 'smtp_auth_error';
+  }
+
+  if (/ECONNREFUSED|ETIMEDOUT|EHOSTUNREACH|ENOTFOUND|Connection closed|Greeting never received|ESOCKET/i.test(text)) {
+    return 'smtp_connection_error';
+  }
+
+  if (/No recipients defined|recipient|RCPT/i.test(text)) {
+    return 'smtp_recipient_error';
+  }
+
+  if (/MAIL FROM|sender|from/i.test(text)) {
+    return 'smtp_sender_error';
+  }
+
+  return 'server_error';
+}
+
+function errorHint(category) {
+  const hints = {
+    captcha_verification_error: 'Controleer TURNSTILE_SECRET_KEY en TURNSTILE_ALLOWED_HOSTNAMES voor deze omgeving.',
+    server_error: 'Bekijk de serverlogs voor de volledige stacktrace.',
+    smtp_auth_error: 'Controleer SMTP_USER en SMTP_PASS. Voor Gmail moet SMTP_PASS een Google App Password zijn, niet het normale wachtwoord.',
+    smtp_connection_error: 'Controleer SMTP_HOST, SMTP_PORT, SMTP_SECURE en of de server uitgaand SMTP-verkeer toestaat. Voor Gmail: poort 587 met SMTP_SECURE=false of poort 465 met SMTP_SECURE=true.',
+    smtp_recipient_error: 'Controleer CONTACT_TO. Het ontvangeradres moet correct bestaan en door de mailprovider geaccepteerd worden.',
+    smtp_sender_error: 'Controleer CONTACT_FROM. Bij Gmail moet dit meestal gelijk zijn aan SMTP_USER of als alias toegestaan zijn.'
+  };
+
+  return hints[category] || hints.server_error;
+}
+
+function formatServerError(error, status) {
+  const appEnv = getAppEnv();
+  const category = classifyServerError(error);
+  const base = {
+    category,
+    error: 'Contactformulier kon de aanvraag niet verwerken.',
+    hint: errorHint(category),
+    ok: false
+  };
+
+  const detail = {
+    code: error.code || '',
+    command: error.command || '',
+    message: redactSecretValues(error.message || ''),
+    response: redactSecretValues(error.response || ''),
+    responseCode: error.responseCode || '',
+    status
+  };
+
+  if (appEnv === 'prod' || appEnv === 'production') {
+    return base;
+  }
+
+  if (appEnv === 'test') {
+    return {
+      ...base,
+      detail,
+      environment: appEnv,
+      smtpConfig: smtpConfigSummary()
+    };
+  }
+
+  return {
+    ...base,
+    debug: {
+      ...detail,
+      stack: redactSecretValues(error.stack || '')
+    },
+    environment: appEnv,
+    smtpConfig: smtpConfigSummary()
+  };
+}
+
 function getClientAddress(req) {
   const forwardedFor = req.headers['x-forwarded-for'];
 
@@ -285,8 +399,10 @@ const server = createServer(async (req, res) => {
     await serveFile(res, safePath);
   } catch (error) {
     const status = error.statusCode || 500;
-    const message = status >= 500 ? 'Serverfout bij het verwerken van de aanvraag.' : error.message;
-    sendJson(res, status, { ok: false, error: message });
+    const body = status >= 500
+      ? formatServerError(error, status)
+      : { ok: false, error: error.message };
+    sendJson(res, status, body);
   }
 });
 

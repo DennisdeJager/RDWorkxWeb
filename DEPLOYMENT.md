@@ -65,6 +65,7 @@ Benodigde configuratie per ALM-omgeving:
 
 Zonder Turnstile secret of SMTP-configuratie retourneert `/api/contact` bewust `503` en wordt er geen bericht verstuurd.
 De compose-deploy leest deze waarden uit de `.env` van de betreffende ALM-omgeving en geeft ze door aan de webcontainer.
+Bij fouten geeft DEV volledige geschoonde debugdetails terug, TEST toont diagnose en configuratiesamenvatting zonder secrets, en PROD toont een compacte categorie met herstelhint.
 
 
 ## Verwachte deploy workflow op LXC

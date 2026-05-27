@@ -919,7 +919,9 @@ main {
   font-size: .92rem;
   font-weight: 850;
   margin: 0;
+  overflow-wrap: anywhere;
   padding: 12px 14px;
+  white-space: pre-wrap;
 }
 
 .form-message.success {

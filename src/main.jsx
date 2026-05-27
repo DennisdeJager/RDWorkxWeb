@@ -31,6 +31,32 @@ const buildCommitDate = import.meta.env.VITE_COMMIT_DATE || 'lokale build';
 const buildCommitLabel = buildCommit === 'local' ? buildCommit : buildCommit.slice(0, 7);
 const fallbackTurnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
+function formatContactFailure(result) {
+  const lines = [result.error || 'Versturen is niet gelukt. Probeer het later nog eens.'];
+
+  if (result.category) {
+    lines.push(`Categorie: ${result.category}`);
+  }
+
+  if (result.hint) {
+    lines.push(`Hint: ${result.hint}`);
+  }
+
+  if (result.detail) {
+    lines.push(`Details: ${JSON.stringify(result.detail, null, 2)}`);
+  }
+
+  if (result.smtpConfig) {
+    lines.push(`SMTP/config: ${JSON.stringify(result.smtpConfig, null, 2)}`);
+  }
+
+  if (result.debug) {
+    lines.push(`Debug: ${JSON.stringify(result.debug, null, 2)}`);
+  }
+
+  return lines.join('\n');
+}
+
 const navItems = [
   ['wat-we-doen', 'Wat we doen'],
   ['voor-wie', 'Voor wie'],
@@ -187,7 +213,7 @@ function App() {
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.ok) {
-        throw new Error(result.error || 'Versturen is niet gelukt. Probeer het later nog eens.');
+        throw new Error(formatContactFailure(result));
       }
 
       form.reset();
