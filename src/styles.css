@@ -857,12 +857,9 @@ main {
   color: rgb(236 238 242 / 72%);
 }
 
-.mail-link {
-  align-items: center;
-  color: #b77aff;
-  display: inline-flex;
-  font-weight: 950;
-  gap: 8px;
+.contact-note {
+  color: rgb(236 238 242 / 82%);
+  font-weight: 800;
   margin-top: 18px;
 }
 
@@ -896,6 +893,45 @@ main {
 .contact-form textarea:focus {
   border-color: rgb(20 117 209 / 55%);
   outline: 3px solid rgb(20 117 209 / 20%);
+}
+
+.contact-form button:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+  transform: none;
+}
+
+.hp-field {
+  height: 1px;
+  left: -10000px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+.turnstile-wrap {
+  min-height: 65px;
+}
+
+.form-message {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: .92rem;
+  font-weight: 850;
+  margin: 0;
+  padding: 12px 14px;
+}
+
+.form-message.success {
+  background: rgb(34 104 106 / 14%);
+  border-color: rgb(34 104 106 / 28%);
+  color: #aceef0;
+}
+
+.form-message.error {
+  background: rgb(186 26 26 / 14%);
+  border-color: rgb(255 218 214 / 28%);
+  color: #ffdad6;
 }
 
 .footer {

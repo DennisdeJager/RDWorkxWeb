@@ -38,7 +38,32 @@ POSTGRES_USER=sg
 POSTGRES_PASSWORD=
 HOST=0.0.0.0
 PORT=5175
+TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+TURNSTILE_ALLOWED_HOSTNAMES=www-dev.rdworkx.nl,rdworkx.nl,www.rdworkx.nl
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=
+SMTP_PASS=
+CONTACT_FROM=
+CONTACT_TO=
 ```
+
+## Contactformulier
+
+Het contactformulier gebruikt server-side SMTP en Cloudflare Turnstile.
+
+Benodigde configuratie per ALM-omgeving:
+
+- `TURNSTILE_SITE_KEY`: publieke Turnstile site key voor de betreffende host.
+- `TURNSTILE_SECRET_KEY`: geheime Turnstile key, alleen server-side.
+- `TURNSTILE_ALLOWED_HOSTNAMES`: komma-gescheiden toegestane hostnames.
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`: SMTP-configuratie.
+- `CONTACT_FROM`: afzenderadres dat door SMTP mag verzenden.
+- `CONTACT_TO`: interne ontvanger van intake-aanvragen.
+
+Zonder Turnstile secret of SMTP-configuratie retourneert `/api/contact` bewust `503` en wordt er geen bericht verstuurd.
 
 
 ## Verwachte deploy workflow op LXC

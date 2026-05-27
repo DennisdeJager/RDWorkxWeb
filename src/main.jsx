@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowRight,
@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   ClipboardCheck,
   FileCheck2,
-  Mail,
   Menu,
   Moon,
   SearchCheck,
@@ -30,6 +29,7 @@ const themeCookieName = 'rdworkx-theme';
 const buildCommit = import.meta.env.VITE_COMMIT_SHA || 'local';
 const buildCommitDate = import.meta.env.VITE_COMMIT_DATE || 'lokale build';
 const buildCommitLabel = buildCommit === 'local' ? buildCommit : buildCommit.slice(0, 7);
+const fallbackTurnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
 const navItems = [
   ['wat-we-doen', 'Wat we doen'],
@@ -138,6 +138,11 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
   const [activeSection, setActiveSection] = useState('wat-we-doen');
+  const [contactStatus, setContactStatus] = useState({ state: 'idle', message: '' });
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState(fallbackTurnstileSiteKey);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef(null);
+  const turnstileWidgetId = useRef(null);
   const headerLogoSrc = theme === 'dark' ? logoDarkFullSrc : logoLightFullSrc;
   const footerLogoSrc = logoDarkFullSrc;
   const contactMonogramSrc = theme === 'dark' ? monogramDarkSrc : monogramLightSrc;
@@ -148,11 +153,122 @@ function App() {
     closeMenu();
   };
   const toggleTheme = () => setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!turnstileSiteKey) {
+      setContactStatus({
+        state: 'error',
+        message: 'Het contactformulier is nog niet volledig geconfigureerd.'
+      });
+      return;
+    }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    setContactStatus({ state: 'loading', message: 'Uw aanvraag wordt verstuurd...' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        body: JSON.stringify({
+          company: formData.get('company'),
+          email: formData.get('email'),
+          message: formData.get('message'),
+          name: formData.get('name'),
+          turnstileToken,
+          website: formData.get('website')
+        }),
+        headers: {
+          'content-type': 'application/json'
+        },
+        method: 'POST'
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || 'Versturen is niet gelukt. Probeer het later nog eens.');
+      }
+
+      form.reset();
+      window.turnstile?.reset?.(turnstileWidgetId.current);
+      setTurnstileToken('');
+      setContactStatus({
+        state: 'success',
+        message: 'Bedankt. Uw aanvraag is verstuurd, we nemen contact met u op.'
+      });
+    } catch (error) {
+      window.turnstile?.reset?.(turnstileWidgetId.current);
+      setTurnstileToken('');
+      setContactStatus({
+        state: 'error',
+        message: error.message || 'Versturen is niet gelukt. Probeer het later nog eens.'
+      });
+    }
+  };
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     saveTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch('/api/public-config')
+      .then((response) => response.ok ? response.json() : {})
+      .then((config) => {
+        if (!ignore && config.turnstileSiteKey) {
+          setTurnstileSiteKey(config.turnstileSiteKey);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!turnstileSiteKey || !turnstileRef.current) {
+      return undefined;
+    }
+
+    let timeoutId;
+    let cancelled = false;
+
+    const renderTurnstile = () => {
+      if (cancelled) {
+        return;
+      }
+
+      if (!window.turnstile?.render) {
+        timeoutId = window.setTimeout(renderTurnstile, 250);
+        return;
+      }
+
+      if (turnstileWidgetId.current !== null) {
+        window.turnstile.remove?.(turnstileWidgetId.current);
+      }
+
+      turnstileRef.current.innerHTML = '';
+      turnstileWidgetId.current = window.turnstile.render(turnstileRef.current, {
+        action: 'contact',
+        callback: (token) => setTurnstileToken(token),
+        'error-callback': () => setTurnstileToken(''),
+        'expired-callback': () => setTurnstileToken(''),
+        sitekey: turnstileSiteKey,
+        theme
+      });
+    };
+
+    renderTurnstile();
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [theme, turnstileSiteKey]);
 
   useEffect(() => {
     const sectionElements = navItems
@@ -442,14 +558,32 @@ function App() {
               wat praktisch, haalbaar en verstandig is voor uw organisatie. Vaak begint het met een proces
               dat eenvoudiger, sneller of overzichtelijker kan.
             </p>
-            <a className="mail-link" href="mailto:hallo@rdworkx.nl"><Mail size={18} /> hallo@rdworkx.nl</a>
+            <p className="contact-note">
+              Gebruik het formulier hieronder. Zo houden we uw aanvraag netjes bij elkaar en staat ons e-mailadres
+              niet open en bloot op de site.
+            </p>
           </div>
-          <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
-            <label>Naam<input type="text" name="name" autoComplete="name" /></label>
+          <form className="contact-form" onSubmit={handleContactSubmit}>
+            <label>Naam<input type="text" name="name" autoComplete="name" required /></label>
             <label>Bedrijf<input type="text" name="company" autoComplete="organization" /></label>
-            <label>E-mail<input type="email" name="email" autoComplete="email" /></label>
-            <label>Wat wilt u slimmer regelen?<textarea name="message" rows="5" /></label>
-            <button className="button primary" type="submit">Plan een gratis intake <Send size={16} /></button>
+            <label>E-mail<input type="email" name="email" autoComplete="email" required /></label>
+            <label>Wat wilt u slimmer regelen?<textarea name="message" rows="5" required /></label>
+            <label className="hp-field">Website<input type="text" name="website" tabIndex="-1" autoComplete="off" /></label>
+            {turnstileSiteKey ? (
+              <div className="turnstile-wrap">
+                <div ref={turnstileRef} />
+              </div>
+            ) : (
+              <p className="form-message error">Captcha is nog niet geconfigureerd.</p>
+            )}
+            {contactStatus.message ? (
+              <p className={`form-message ${contactStatus.state === 'success' ? 'success' : contactStatus.state === 'error' ? 'error' : ''}`}>
+                {contactStatus.message}
+              </p>
+            ) : null}
+            <button className="button primary" type="submit" disabled={contactStatus.state === 'loading' || !turnstileSiteKey || !turnstileToken}>
+              {contactStatus.state === 'loading' ? 'Versturen...' : 'Plan een gratis intake'} <Send size={16} />
+            </button>
           </form>
         </section>
       </main>
