@@ -2,49 +2,51 @@
 
 ## Status
 
-NO-GO voor Deployment vanuit deze Codex-sessie.
+GO voor Deployment.
 
 ## Deployed commit
 
-Niet gedeployed.
-
-Beschikbare commits op `main`:
-
-- `12ea6299d56a4e2b6b7d234b51f93cf85c91b8f0` - implementatiecommit
-- `2c23688` - deploymentplan-SHA documentatiecommit
+`9fb66febe0c5af1610297ac7d7714f7ae0a49d7a`
 
 ## Targetomgeving
 
-- Dev-container: `192.168.10.12`
-- Local-data container: `192.168.10.50`
+- DEV app-runtime: `192.168.10.12`
+- DEV publieke URL: `https://www-dev.rdworkx.nl/`
+- Data-host volgens architectuur: `192.168.10.50`
 
 ## Datum/tijd
 
-2026-06-07
-
-## Uitgevoerde deploymentpoging
-
-- `ssh dev-container hostname` - faalt: hostnaam onbekend.
-- `ssh local-data hostname` - faalt: hostnaam onbekend.
-- `ssh 192.168.10.50 hostname` - faalt: timeout.
-- `ssh 192.168.10.12 hostname` - faalt: timeout.
+2026-06-07 14:44 Europe/Amsterdam
 
 ## Deploymentresultaat
 
-Niet uitgevoerd. De doelcontainers zijn vanuit deze werkomgeving niet bereikbaar via SSH.
+- Workflow: `Deploy Latest To Dev`
+- Run: `27092890498`
+- Run URL: `https://github.com/DennisdeJager/RDWorkxWeb/actions/runs/27092890498`
+- Resultaat: `success`
+- Docker build/push: GO
+- LAN SSH deploy: GO
 
 ## Healthcheckresultaat
 
-Niet uitgevoerd, omdat deployment niet gestart kon worden.
+- `curl http://192.168.10.12:31015/health` - GO, `{"ok":true,"service":"rdworkxwebsite-web"}`
+- `curl http://192.168.10.12:31015/ready` - GO, `{"ok":true,"service":"rdworkxwebsite-web"}`
+- `curl http://192.168.10.12:31015/api/public-config` - GO, Turnstile site key beschikbaar
+- `curl http://192.168.10.12:5176/health` - GO, `{"ok":true,"service":"rdworkxwebsite-api"}`
+- `curl http://192.168.10.12:5176/ready` - GO, `{"databaseUrlSet":true,"ok":true,"service":"rdworkxwebsite-api"}`
 
 ## Smoke-testresultaat
 
-Niet uitgevoerd, omdat deployment niet gestart kon worden.
+- `curl --compressed https://www-dev.rdworkx.nl/` - GO, HTTP 200, niet-lege HTML body
+- `curl --compressed https://www-dev.rdworkx.nl/assets/index-CvhsmBlr.js` - GO, HTTP 200, niet-lege JS body
+- `curl --compressed https://www-dev.rdworkx.nl/assets/index-B4q7EyJR.css` - GO, HTTP 200, niet-lege CSS body
 
 ## Afwijkingen
 
-De Development-fase is wel afgerond en gepusht naar `main`. De Deployment-fase blijft geblokkeerd totdat SSH-toegang, hostaliassen of een alternatieve ALM-route beschikbaar is.
+- Eerste deploymentrun `27092745378` faalde op `DATABASE_URL` interpolatie tijdens Compose servicelijst-detectie in GitHub Actions.
+- Remediationcommit `9fb66fe` laat Compose renderen zonder database-secret in de runner-env, terwijl echte DEV-runtime `DATABASE_URL` via `.env` blijft gebruiken.
+- Directe SSH vanaf deze Codex-machine naar `192.168.10.12` gaf `Permission denied`; de ALM/GitHub Actions runner kon wel via LAN SSH deployen.
 
 ## Eindoordeel
 
-NO-GO. Herstart Deployment zodra `192.168.10.12` en `192.168.10.50` bereikbaar zijn of de juiste deploymentroute beschikbaar is.
+GO. RD Workx Website draait op DEV met gescheiden `rdworkxwebsite-web` en `rdworkxwebsite-api`; de API is bereikbaar, heeft `DATABASE_URL` gezet en de publieke DEV-site plus assets laden correct.
