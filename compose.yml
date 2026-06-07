@@ -1,16 +1,38 @@
 services:
   web:
-    image: ${IMAGE_REF:-rdworkxwebsite:local}
+    image: ${WEB_IMAGE_REF:-rdworkxwebsite-web:local}
+    container_name: rdworkxwebsite-web
     build:
       context: .
+      target: web
     restart: unless-stopped
     environment:
       HOST: 0.0.0.0
       PORT: ${WEB_INTERNAL_PORT:-5175}
       APP_ENV: ${APP_ENV:-dev}
       PUBLIC_URL: ${PUBLIC_URL:-https://rdworkx.nl}
+      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://api:5176}
+    ports:
+      - "${WEB_BIND_ADDRESS:-192.168.10.12}:${WEB_PORT:-5175}:${WEB_INTERNAL_PORT:-5175}"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  api:
+    image: ${API_IMAGE_REF:-rdworkxwebsite-api:local}
+    container_name: rdworkxwebsite-api
+    build:
+      context: .
+      target: api
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: ${API_INTERNAL_PORT:-5176}
+      APP_ENV: ${APP_ENV:-dev}
+      PUBLIC_URL: ${PUBLIC_URL:-https://rdworkx.nl}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      DATABASE_URL: ${DATABASE_URL:-postgres://rdworkxwebsite:${POSTGRES_PASSWORD:-rdworkxwebsite_dev}@192.168.10.50:55432/rdworkxwebsite}
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
       TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
       TURNSTILE_ALLOWED_HOSTNAMES: ${TURNSTILE_ALLOWED_HOSTNAMES:-www-dev.rdworkx.nl,rdworkx.nl,www.rdworkx.nl}
@@ -21,38 +43,6 @@ services:
       SMTP_PASS: ${SMTP_PASS:-}
       CONTACT_FROM: ${CONTACT_FROM:-}
       CONTACT_TO: ${CONTACT_TO:-}
-      DATABASE_URL: postgres://${POSTGRES_USER:-sg}:${POSTGRES_PASSWORD:-rdworkxwebsite_dev}@postgres:5432/${POSTGRES_DB:-rdworkxwebsite}
     ports:
-      - "${WEB_PORT:-5175}:${WEB_INTERNAL_PORT:-5175}"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - appdata:/app/data
-      - uploads:/app/uploads
+      - "${API_BIND_ADDRESS:-192.168.10.12}:${API_PORT:-5176}:${API_INTERNAL_PORT:-5176}"
 
-  postgres:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-rdworkxwebsite}
-      POSTGRES_USER: ${POSTGRES_USER:-sg}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rdworkxwebsite_dev}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER:-sg}\" -d \"$${POSTGRES_DB:-rdworkxwebsite}\""]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - backups:/backups
-
-volumes:
-  appdata:
-  uploads:
-  postgres-data:
-  backups:

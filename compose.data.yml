@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: rdworkxwebsite-postgres
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-rdworkxwebsite}
+      POSTGRES_USER: ${POSTGRES_USER:-rdworkxwebsite}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER:-rdworkxwebsite}\" -d \"$${POSTGRES_DB:-rdworkxwebsite}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "${POSTGRES_BIND_ADDRESS:-192.168.10.50}:${POSTGRES_PORT:-55432}:5432"
+    volumes:
+      - rdworkxwebsite-postgres-data:/var/lib/postgresql/data
+      - rdworkxwebsite-postgres-backups:/backups
+
+volumes:
+  rdworkxwebsite-postgres-data:
+  rdworkxwebsite-postgres-backups:

@@ -14,6 +14,7 @@
 ## Afgerond
 
 - [x] Complete rebrand naar R&D Workx website met nieuwe styleguide, logo's, favicons, sfeerbeelden en homepagecopy.
+- [x] Lokale containerarchitectuur gesplitst naar rdworkxwebsite-web, rdworkxwebsite-api en rdworkxwebsite-postgres.
 - [x] SEO-, robots-, sitemap-, Open Graph-, structured data- en llms.txt-basis toegevoegd voor zoekmachines en AI-agents.
 - [x] Header-, contact- en footerlogo's per theme en positie aangescherpt.
 - [x] Logo's vervangen door theme-specifieke RD Workx huisstijlbestanden.

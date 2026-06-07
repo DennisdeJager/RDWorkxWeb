@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "appId": "rdworkxwebsite",
   "displayName": "R&D Workx Website",
-  "repo": "DennisdeJager/RDWorkxWebsite",
+  "repo": "DennisdeJager/RDWorkxWeb",
   "services": {
     "web": {
       "type": "web",
@@ -10,8 +10,16 @@
       "public": true,
       "healthPath": "/health"
     },
+    "api": {
+      "type": "api",
+      "internalPort": 5176,
+      "public": false,
+      "healthPath": "/health"
+    },
     "postgres": {
       "type": "postgres",
+      "containerName": "rdworkxwebsite-postgres",
+      "host": "192.168.10.50",
       "public": false
     }
   },

@@ -5,23 +5,25 @@ Gebruik dit document als vaste context voor andere chats wanneer je hulp wilt me
 ## Project
 
 - Naam: R&D Workx website
-- Stack: Vite + React frontend, Node.js runtime server
+- Stack: Vite + React frontend, Node.js webserver/API-service
 - Package manager: npm
-- Runtime entrypoint: `scripts/serve-dist.mjs`
+- Web entrypoint: `scripts/serve-web.mjs`
+- API entrypoint: `scripts/api-server.mjs`
 - Productiebuild: `dist/`
-- Interne apppoort: `5175`
-- Externe LXC-poort: `5175`
+- Webpoort op dev-container `192.168.10.12`: `5175`
+- API-poort op dev-container `192.168.10.12`: `5176`
 - Healthcheck: `/health`
 - Readiness: `/ready`
-- Data: PostgreSQL container `rdworkxwebsite-db` plus volumes voor appdata, uploads en backups
-- Docker Compose services: `website` (`rdworkxwebsite-web`) en `postgres` (`rdworkxwebsite-db`)
+- Data: PostgreSQL container `rdworkxwebsite-postgres` op local-data `192.168.10.50`
+- Docker Compose app services: `web` (`rdworkxwebsite-web`) en `api` (`rdworkxwebsite-api`)
+- Docker Compose data service: `postgres` (`rdworkxwebsite-postgres`) via `compose.data.yml`
 
 ## Apps en routes
 
 - Portal home: `/`
 - Content beheer: `/beheer` (`admin`)
 
-De Node server serveert de SPA en valt bij onbekende routes terug op `dist/index.html`.
+De webserver serveert de SPA, valt bij onbekende routes terug op `dist/index.html` en proxyt `/api/*` naar de API-service.
 
 
 ## Environment variables
@@ -32,12 +34,18 @@ Zie ook `.env.example`.
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4.1-mini
 PUBLIC_URL=https://rdworkx.nl
-DATABASE_URL=postgres://sg:CHANGE_ME@rdworkxwebsite-db:5432/rdworkxwebsite
+APP_ENV=dev
+WEB_BIND_ADDRESS=192.168.10.12
+WEB_PORT=5175
+API_BIND_ADDRESS=192.168.10.12
+API_PORT=5176
+API_INTERNAL_URL=http://api:5176
+DATABASE_URL=postgres://rdworkxwebsite:CHANGE_ME@192.168.10.50:55432/rdworkxwebsite
+POSTGRES_BIND_ADDRESS=192.168.10.50
+POSTGRES_PORT=55432
 POSTGRES_DB=rdworkxwebsite
-POSTGRES_USER=sg
+POSTGRES_USER=rdworkxwebsite
 POSTGRES_PASSWORD=
-HOST=0.0.0.0
-PORT=5175
 TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET_KEY=
 TURNSTILE_ALLOWED_HOSTNAMES=www-dev.rdworkx.nl,rdworkx.nl,www.rdworkx.nl
@@ -64,11 +72,26 @@ Benodigde configuratie per ALM-omgeving:
 - `CONTACT_TO`: interne ontvanger van intake-aanvragen.
 
 Zonder Turnstile secret of SMTP-configuratie retourneert `/api/contact` bewust `503` en wordt er geen bericht verstuurd.
-De compose-deploy leest deze waarden uit de `.env` van de betreffende ALM-omgeving en geeft ze door aan de webcontainer.
+De compose-deploy leest deze waarden uit de `.env` van de betreffende omgeving en geeft server-side secrets alleen door aan `rdworkxwebsite-api`.
 Bij fouten geeft DEV volledige geschoonde debugdetails terug, TEST toont diagnose en configuratiesamenvatting zonder secrets, en PROD toont een compacte categorie met herstelhint.
 
 
-## Verwachte deploy workflow op LXC
+## Lokale deploy workflow
+
+### Data-host `192.168.10.50`
+
+```bash
+git clone <github-url> ~/rdworkxwebsite
+cd ~/rdworkxwebsite
+cp .env.example .env
+# vul POSTGRES_PASSWORD in
+docker compose -f compose.data.yml up -d
+docker ps
+```
+
+Beperk poort `55432` tot de lokale infra-route vanaf `192.168.10.12`; expose deze database niet publiek.
+
+### Dev-container `192.168.10.12`
 
 De LXC-host is bereikbaar via SSH-alias `dev-container`. Binnen deze LXC draait Docker met Compose.
 
@@ -78,7 +101,7 @@ Eerste deploy:
 git clone <github-url> ~/rdworkxwebsite
 cd ~/rdworkxwebsite
 cp .env.example .env
-# vul POSTGRES_PASSWORD en eventuele API keys in
+# vul POSTGRES_PASSWORD en eventuele API/SMTP/Turnstile keys in
 docker compose up -d --build
 ```
 
@@ -94,8 +117,10 @@ Controles:
 
 ```bash
 docker ps
-curl http://127.0.0.1:5175/health
-curl http://127.0.0.1:5175/ready
+curl http://192.168.10.12:5175/health
+curl http://192.168.10.12:5175/ready
+curl http://192.168.10.12:5175/api/public-config
+curl http://192.168.10.12:5176/health
 ```
 
 ## Veiligheid
@@ -103,5 +128,7 @@ curl http://127.0.0.1:5175/ready
 - Commit geen echte `OPENAI_API_KEY`, SMTP wachtwoorden of SSH gegevens.
 - Zet productiegeheimen in `.env` op de server of in de hosting secret manager.
 - `.env.example` mag placeholders bevatten.
+- `DATABASE_URL`, `SMTP_PASS` en `TURNSTILE_SECRET_KEY` horen alleen in de API-service.
+- De webservice krijgt geen databasecredentials.
 - Controleer na deploy altijd `/health` 
 - Controleer na identity-configuratie ook `/login`, `/beheer` en `/ready`.
