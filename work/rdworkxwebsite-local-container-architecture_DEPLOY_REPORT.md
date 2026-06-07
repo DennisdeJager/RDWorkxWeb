@@ -2,11 +2,11 @@
 
 ## Status
 
-GO voor Deployment.
+NO-GO voor volledige Deployment-gate door PostgreSQL credential mismatch op de data-host.
 
 ## Deployed commit
 
-`9fb66febe0c5af1610297ac7d7714f7ae0a49d7a`
+`571c95b577adf3046242c06f13a1f9fd6c3b680c`
 
 ## Targetomgeving
 
@@ -16,39 +16,55 @@ GO voor Deployment.
 
 ## Datum/tijd
 
-2026-06-07 14:44 Europe/Amsterdam
+2026-06-07 15:04 Europe/Amsterdam
 
 ## Deploymentresultaat
 
 - Workflow: `Deploy Latest To Dev`
-- Run: `27092890498`
-- Run URL: `https://github.com/DennisdeJager/RDWorkxWeb/actions/runs/27092890498`
+- Run: `27093362028`
+- Run URL: `https://github.com/DennisdeJager/RDWorkxWeb/actions/runs/27093362028`
 - Resultaat: `success`
 - Docker build/push: GO
 - LAN SSH deploy: GO
 
 ## Healthcheckresultaat
 
-- `curl http://192.168.10.12:31015/health` - GO, `{"ok":true,"service":"rdworkxwebsite-web"}`
-- `curl http://192.168.10.12:31015/ready` - GO, `{"ok":true,"service":"rdworkxwebsite-web"}`
-- `curl http://192.168.10.12:31015/api/public-config` - GO, Turnstile site key beschikbaar
 - `curl http://192.168.10.12:5176/health` - GO, `{"ok":true,"service":"rdworkxwebsite-api"}`
-- `curl http://192.168.10.12:5176/ready` - GO, `{"databaseUrlSet":true,"ok":true,"service":"rdworkxwebsite-api"}`
-- `Test-NetConnection 192.168.10.50:55432` vanaf deze Codex-machine - geen TCP-connectie; dit is geen publieke DB-route en kan passen bij de gewenste beperking tot de DEV app-host.
+- `curl http://192.168.10.12:31015/ready` - GO, `{"ok":true,"service":"rdworkxwebsite-web"}`
+- `curl http://192.168.10.12:5176/ready` - NO-GO, `database_auth_error`, `databaseReachable:false`, `databaseUrlSource:"legacy-normalized"`, PostgreSQL code `28P01`
 
 ## Smoke-testresultaat
 
 - `curl --compressed https://www-dev.rdworkx.nl/` - GO, HTTP 200, niet-lege HTML body
-- `curl --compressed https://www-dev.rdworkx.nl/assets/index-CvhsmBlr.js` - GO, HTTP 200, niet-lege JS body
 - `curl --compressed https://www-dev.rdworkx.nl/assets/index-B4q7EyJR.css` - GO, HTTP 200, niet-lege CSS body
 
-## Afwijkingen
+## Uitgevoerde remediation
 
-- Eerste deploymentrun `27092745378` faalde op `DATABASE_URL` interpolatie tijdens Compose servicelijst-detectie in GitHub Actions.
-- Remediationcommit `9fb66fe` laat Compose renderen zonder database-secret in de runner-env, terwijl echte DEV-runtime `DATABASE_URL` via `.env` blijft gebruiken.
-- Directe SSH vanaf deze Codex-machine naar `192.168.10.12` gaf `Permission denied`; de ALM/GitHub Actions runner kon wel via LAN SSH deployen.
-- De huidige API-readiness bewijst dat `DATABASE_URL` gezet is, maar bevat nog geen live PostgreSQL-query. Omdat de website nu geen tabellen gebruikt, is DB-connectiviteit niet functioneel geraakt in deze smoke.
+- API-readiness uitgebreid met een live PostgreSQL `select 1` via `postgres.js`.
+- API-readiness retourneert nu `503` bij ontbrekende of onbereikbare PostgreSQL.
+- Oude DEV `DATABASE_URL` wordt API-only als `LEGACY_DATABASE_URL` gelezen en host `rdworkxwebsite-db` wordt genormaliseerd naar `192.168.10.50:55432`.
+- App-compose houdt databasecredentials alleen op `rdworkxwebsite-api`; web krijgt geen DB-secret.
+
+## Open blocker
+
+De API bereikt de data-host maar PostgreSQL weigert authenticatie:
+
+```text
+category: database_auth_error
+code: 28P01
+message: password authentication failed for user "sg"
+```
+
+Dit betekent dat de huidige DEV-secretwaarde niet overeenkomt met de PostgreSQL role/user op `rdworkxwebsite-postgres`, of dat de data-host database nog niet is geprovisiond met de verwachte app-specifieke credentials.
+
+## Benodigde correctie
+
+Een van deze acties is nodig op de DEV/data-laag:
+
+- Zet `API_DATABASE_URL=postgres://rdworkxwebsite:<juiste-secret>@192.168.10.50:55432/rdworkxwebsite` in de DEV `.env` van `rdworkxwebsite-api`; of
+- Provision/repair op `local-data` de databasecontainer `rdworkxwebsite-postgres` met database `rdworkxwebsite`, role `rdworkxwebsite` en de bijbehorende secret; of
+- Geef Codex/ALM een route om de data-host secret/provisioning te herstellen zonder secretwaarden te lekken.
 
 ## Eindoordeel
 
-GO voor de DEV app-deploy. RD Workx Website draait op DEV met gescheiden `rdworkxwebsite-web` en `rdworkxwebsite-api`; de API is bereikbaar, heeft `DATABASE_URL` gezet en de publieke DEV-site plus assets laden correct. PostgreSQL blijft niet publiek bereikbaar vanaf deze Codex-machine; een DB-query vanuit de DEV-container vraagt een aparte API-readinessuitbreiding of host-side controle.
+NO-GO. De app-deploy zelf is groen en de publieke site werkt, maar de nieuwe correcte API-readiness bewijst dat PostgreSQL-authenticatie op de data-host nog niet klopt.
