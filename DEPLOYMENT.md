@@ -101,7 +101,7 @@ Eerste deploy:
 git clone <github-url> ~/rdworkxwebsite
 cd ~/rdworkxwebsite
 cp .env.example .env
-# vul POSTGRES_PASSWORD en eventuele API/SMTP/Turnstile keys in
+# vul DATABASE_URL en eventuele API/SMTP/Turnstile keys in
 docker compose up -d --build
 ```
 
