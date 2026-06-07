@@ -1,4 +1,4 @@
-# Architectuur - RD Workx Website Lokale Containerarchitectuur
+﻿# Architectuur - RD Workx Website Lokale Containerarchitectuur
 
 ## Besluit
 
@@ -21,7 +21,7 @@ Alleen `rdworkxwebsite-api` krijgt `DATABASE_URL`. Web gebruikt `API_INTERNAL_UR
 
 - Web: `192.168.10.12:5175`
 - API: `192.168.10.12:5176`
-- PostgreSQL: `192.168.10.50:55432`, alleen bedoeld voor de lokale app-host route.
+- PostgreSQL: `192.168.10.50:55436`, alleen bedoeld voor de lokale app-host route.
 
 ## Risico's
 

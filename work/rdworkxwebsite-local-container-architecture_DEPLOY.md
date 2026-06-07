@@ -1,4 +1,4 @@
-# Deployment Plan - RD Workx Website Lokale Containerarchitectuur
+﻿# Deployment Plan - RD Workx Website Lokale Containerarchitectuur
 
 ## Commit
 
@@ -27,8 +27,8 @@ Secretwaarden niet committen.
 
 Benodigd op dev-container:
 
-- `API_DATABASE_URL=postgres://rdworkxwebsite:<secret>@192.168.10.50:55432/rdworkxwebsite` of `POSTGRES_PASSWORD` voor de compose-opbouw van dezelfde URL
-- Bestaande oude `DATABASE_URL` mag blijven staan; de API krijgt deze alleen als `LEGACY_DATABASE_URL` en herschrijft host `rdworkxwebsite-db` naar `192.168.10.50:55432`.
+- `API_DATABASE_URL=postgres://rdworkxwebsite:<secret>@192.168.10.50:55436/rdworkxwebsite` of `POSTGRES_PASSWORD` voor de compose-opbouw van dezelfde URL
+- Bestaande oude `DATABASE_URL` mag blijven staan; de API krijgt deze alleen als `LEGACY_DATABASE_URL` en herschrijft host `rdworkxwebsite-db` naar `192.168.10.50:55436`.
 - `TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
 - `SMTP_HOST`
@@ -45,7 +45,7 @@ Benodigd op data-container:
 - `POSTGRES_USER=rdworkxwebsite`
 - `POSTGRES_PASSWORD`
 - `POSTGRES_BIND_ADDRESS=192.168.10.50`
-- `POSTGRES_PORT=55432`
+- `POSTGRES_PORT=55436`
 
 ## Deploycommando's
 
@@ -99,6 +99,6 @@ Gebruik geen volume-delete zonder aparte dataretentiebeslissing.
 
 ## Risico's en aandachtspunten
 
-- Beperk PostgreSQL-poort `55432` tot de lokale route vanaf `192.168.10.12`.
+- Beperk PostgreSQL-poort `55436` tot de lokale route vanaf `192.168.10.12`.
 - De API-service is de enige service die databasecredentials mag hebben.
 - Deploy pas naar Done na health/smoke op de doelomgeving.

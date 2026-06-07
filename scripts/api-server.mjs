@@ -102,7 +102,7 @@ function normalizeDatabaseUrl(value) {
 
     if (url.hostname === 'rdworkxwebsite-db') {
       url.hostname = '192.168.10.50';
-      url.port = '55432';
+      url.port = '55436';
     }
 
     return url.toString();

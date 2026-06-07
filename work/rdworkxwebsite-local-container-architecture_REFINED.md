@@ -1,4 +1,4 @@
-# Story Refinement - RD Workx Website Lokale Containerarchitectuur
+﻿# Story Refinement - RD Workx Website Lokale Containerarchitectuur
 
 ## User story
 
@@ -50,7 +50,7 @@ De applicatie volgt het RD Workx patroon: web en API op de dev-runtime, PostgreS
 
 ## Security-impact
 
-Security is van toepassing. De refactor vermindert secret exposure en vereist dat PostgreSQL-poort `55432` op `192.168.10.50` beperkt blijft tot de lokale infra-route vanaf `192.168.10.12`.
+Security is van toepassing. De refactor vermindert secret exposure en vereist dat PostgreSQL-poort `55436` op `192.168.10.50` beperkt blijft tot de lokale infra-route vanaf `192.168.10.12`.
 
 ## UX-impact
 

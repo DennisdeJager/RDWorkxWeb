@@ -1,4 +1,4 @@
-# R&D Workx
+﻿# R&D Workx
 
 Website en portalbasis voor R&D Workx.
 
@@ -39,7 +39,7 @@ Op de dev-container `192.168.10.12`:
 
 Op de local-data container `192.168.10.50`:
 
-- `rdworkxwebsite-postgres` op poort `55432`, alleen bedoeld voor de lokale route vanaf de dev-container.
+- `rdworkxwebsite-postgres` op poort `55436`, alleen bedoeld voor de lokale route vanaf de dev-container.
 
 Start data op de data-host met:
 

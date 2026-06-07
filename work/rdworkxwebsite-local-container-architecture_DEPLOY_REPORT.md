@@ -1,4 +1,4 @@
-# Deployment Report - RD Workx Website Lokale Containerarchitectuur
+﻿# Deployment Report - RD Workx Website Lokale Containerarchitectuur
 
 ## Status
 
@@ -42,7 +42,7 @@ NO-GO voor volledige Deployment-gate door PostgreSQL credential mismatch op de d
 
 - API-readiness uitgebreid met een live PostgreSQL `select 1` via `postgres.js`.
 - API-readiness retourneert nu `503` bij ontbrekende of onbereikbare PostgreSQL.
-- Oude DEV `DATABASE_URL` wordt API-only als `LEGACY_DATABASE_URL` gelezen en host `rdworkxwebsite-db` wordt genormaliseerd naar `192.168.10.50:55432`.
+- Oude DEV `DATABASE_URL` wordt API-only als `LEGACY_DATABASE_URL` gelezen en host `rdworkxwebsite-db` wordt genormaliseerd naar `192.168.10.50:55436`.
 - App-compose houdt databasecredentials alleen op `rdworkxwebsite-api`; web krijgt geen DB-secret.
 
 ## Open blocker
@@ -61,7 +61,7 @@ Dit betekent dat de huidige DEV-secretwaarde niet overeenkomt met de PostgreSQL 
 
 Een van deze acties is nodig op de DEV/data-laag:
 
-- Zet `API_DATABASE_URL=postgres://rdworkxwebsite:<juiste-secret>@192.168.10.50:55432/rdworkxwebsite` in de DEV `.env` van `rdworkxwebsite-api`; of
+- Zet `API_DATABASE_URL=postgres://rdworkxwebsite:<juiste-secret>@192.168.10.50:55436/rdworkxwebsite` in de DEV `.env` van `rdworkxwebsite-api`; of
 - Provision/repair op `local-data` de databasecontainer `rdworkxwebsite-postgres` met database `rdworkxwebsite`, role `rdworkxwebsite` en de bijbehorende secret; of
 - Geef Codex/ALM een route om de data-host secret/provisioning te herstellen zonder secretwaarden te lekken.
 

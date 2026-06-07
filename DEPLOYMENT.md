@@ -1,4 +1,4 @@
-# R&D Workx Portal Deploy Info
+﻿# R&D Workx Portal Deploy Info
 
 Gebruik dit document als vaste context voor andere chats wanneer je hulp wilt met deployen, debuggen of doorontwikkelen van het portal.
 
@@ -40,9 +40,9 @@ WEB_PORT=5175
 API_BIND_ADDRESS=192.168.10.12
 API_PORT=5176
 API_INTERNAL_URL=http://api:5176
-API_DATABASE_URL=postgres://rdworkxwebsite:CHANGE_ME@192.168.10.50:55432/rdworkxwebsite
+API_DATABASE_URL=postgres://rdworkxwebsite:CHANGE_ME@192.168.10.50:55436/rdworkxwebsite
 POSTGRES_BIND_ADDRESS=192.168.10.50
-POSTGRES_PORT=55432
+POSTGRES_PORT=55436
 POSTGRES_DB=rdworkxwebsite
 POSTGRES_USER=rdworkxwebsite
 POSTGRES_PASSWORD=
@@ -89,7 +89,7 @@ docker compose -f compose.data.yml up -d
 docker ps
 ```
 
-Beperk poort `55432` tot de lokale infra-route vanaf `192.168.10.12`; expose deze database niet publiek.
+Beperk poort `55436` tot de lokale infra-route vanaf `192.168.10.12`; expose deze database niet publiek.
 
 ### Dev-container `192.168.10.12`
 
