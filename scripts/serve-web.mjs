@@ -28,6 +28,30 @@ function sendJson(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
+function proxiedResponseHeaders(response) {
+  const blockedHeaders = new Set([
+    'connection',
+    'content-encoding',
+    'content-length',
+    'keep-alive',
+    'proxy-authenticate',
+    'proxy-authorization',
+    'te',
+    'trailer',
+    'transfer-encoding',
+    'upgrade'
+  ]);
+  const headers = {};
+
+  for (const [key, value] of response.headers.entries()) {
+    if (!blockedHeaders.has(key.toLowerCase())) {
+      headers[key] = value;
+    }
+  }
+
+  return headers;
+}
+
 async function proxyApi(req, res, url) {
   const target = new URL(url.pathname + url.search, apiInternalUrl);
   const headers = new Headers();
@@ -48,7 +72,7 @@ async function proxyApi(req, res, url) {
     method: req.method
   });
 
-  res.writeHead(response.status, Object.fromEntries(response.headers.entries()));
+  res.writeHead(response.status, proxiedResponseHeaders(response));
 
   if (response.body) {
     for await (const chunk of response.body) {

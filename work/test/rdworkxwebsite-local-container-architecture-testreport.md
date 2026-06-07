@@ -9,14 +9,16 @@ GO voor Development-checks. Geen open bevindingen.
 - `node --check scripts\serve-web.mjs` - GO
 - `node --check scripts\api-server.mjs` - GO
 - `node --check scripts\serve-dist.mjs` - GO
-- `npm.cmd run lint` - GO
-- `npm run build` - GO
-- `docker compose config` - GO
-- `POSTGRES_PASSWORD=compose_config_placeholder docker compose -f compose.data.yml config` - GO
+- `C:\Program Files\nodejs\npm.cmd ci --cache .npm-cache --no-audit` - GO
+- `C:\Program Files\nodejs\npm.cmd run lint` - GO
+- `C:\Program Files\nodejs\npm.cmd run build` - GO
+- `DATABASE_URL=postgres://rdworkxwebsite:placeholder@192.168.10.50:55432/rdworkxwebsite docker compose config` - GO
+- `POSTGRES_PASSWORD=placeholder docker compose -f compose.data.yml config` - GO
 
 ## Functionele verificatie
 
 - Webservice heeft `/health`, `/ready`, SPA fallback en `/api/*` proxy.
+- Webservice filtert hop-by-hop headers, `Content-Encoding` en `Content-Length` uit API-proxyresponses.
 - API-service heeft `/health`, `/ready`, `/api/public-config` en `/api/contact`.
 - App-compose bevat alleen `rdworkxwebsite-web` en `rdworkxwebsite-api`.
 - Data-compose bevat `rdworkxwebsite-postgres` met eigen database, user en volumes.
@@ -24,6 +26,7 @@ GO voor Development-checks. Geen open bevindingen.
 ## Security checks
 
 - `DATABASE_URL` staat alleen op de API-service in `compose.yml`.
+- `compose.yml` vereist expliciet `DATABASE_URL` en bevat geen fallback databasewachtwoord.
 - SMTP- en Turnstile secrets staan alleen op de API-service.
 - Webservice krijgt alleen `API_INTERNAL_URL` en publieke/runtime-instellingen.
 - `.env.example` bevat placeholders en geen echte secretwaarden.
@@ -32,6 +35,7 @@ GO voor Development-checks. Geen open bevindingen.
 
 - Geen live containerstart uitgevoerd in deze Development-run.
 - Geen ALM DEV deployment uitgevoerd; dat hoort bij Deployment.
+- De standaard `npm` shim op deze Windows-user verwijst naar een ontbrekende Roaming-installatie; checks zijn uitgevoerd met `C:\Program Files\nodejs\npm.cmd`.
 - `docker compose config` gaf op deze Windows-shell een waarschuwing over toegang tot `C:\Users\denni\.docker\config.json`, maar de Compose-configuratie werd wel succesvol gerenderd.
 
 ## Eindoordeel
