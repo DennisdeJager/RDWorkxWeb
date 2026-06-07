@@ -12,6 +12,7 @@ GO voor Development-checks. Geen open bevindingen.
 - `C:\Program Files\nodejs\npm.cmd install postgres --save --cache .npm-cache --no-audit` - GO
 - `C:\Program Files\nodejs\npm.cmd run lint` - GO
 - `C:\Program Files\nodejs\npm.cmd run build` - GO
+- `DATABASE_URL=postgres://rdworkxwebsite:placeholder@rdworkxwebsite-db:5432/rdworkxwebsite docker compose config` - GO, legacy URL wordt alleen aan API-service doorgegeven als `LEGACY_DATABASE_URL`
 - `docker compose config` zonder `DATABASE_URL` in runner-env - GO
 - `DATABASE_URL=postgres://rdworkxwebsite:placeholder@192.168.10.50:55432/rdworkxwebsite docker compose config` - GO
 - `POSTGRES_PASSWORD=placeholder docker compose -f compose.data.yml config` - GO
@@ -22,6 +23,7 @@ GO voor Development-checks. Geen open bevindingen.
 - Webservice filtert hop-by-hop headers, `Content-Encoding` en `Content-Length` uit API-proxyresponses.
 - API-service heeft `/health`, `/ready`, `/api/public-config` en `/api/contact`.
 - API-service `/ready` voert een live PostgreSQL `select 1` uit en retourneert `503` als `DATABASE_URL` ontbreekt of PostgreSQL niet bereikbaar is.
+- API-service normaliseert `LEGACY_DATABASE_URL` met host `rdworkxwebsite-db` naar data-host `192.168.10.50:55432`.
 - App-compose bevat alleen `rdworkxwebsite-web` en `rdworkxwebsite-api`.
 - Data-compose bevat `rdworkxwebsite-postgres` met eigen database, user en volumes.
 
@@ -29,6 +31,7 @@ GO voor Development-checks. Geen open bevindingen.
 
 - De effectieve `DATABASE_URL` staat alleen op de API-service in `compose.yml`.
 - `compose.yml` negeert oude generieke `DATABASE_URL` waarden en gebruikt `API_DATABASE_URL` of de data-host URL opgebouwd uit `POSTGRES_PASSWORD`.
+- Oude DEV `DATABASE_URL` waarden worden alleen als API-only `LEGACY_DATABASE_URL` gebruikt om bestaande secretwaarden zonder commit te behouden.
 - PostgreSQL-client `postgres.js` wordt alleen in de API-server geïmporteerd.
 - SMTP- en Turnstile secrets staan alleen op de API-service.
 - Webservice krijgt alleen `API_INTERNAL_URL` en publieke/runtime-instellingen.

@@ -7,6 +7,7 @@ const port = Number(process.env.PORT || 5176);
 const requestLimitBytes = 16 * 1024;
 const contactRateLimit = new Map();
 let dbClient;
+let dbClientUrl;
 
 function sendJson(res, status, body) {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8' });
@@ -64,7 +65,9 @@ function redactSecretValues(value) {
     process.env.SMTP_PASS,
     process.env.TURNSTILE_SECRET_KEY,
     process.env.OPENAI_API_KEY,
-    process.env.DATABASE_URL
+    process.env.API_DATABASE_URL,
+    process.env.DATABASE_URL,
+    process.env.LEGACY_DATABASE_URL
   ].filter(Boolean);
 
   return secrets.reduce(
@@ -89,13 +92,48 @@ function smtpConfigSummary() {
   };
 }
 
+function normalizeDatabaseUrl(value) {
+  if (!value) {
+    return '';
+  }
+
+  try {
+    const url = new URL(value);
+
+    if (url.hostname === 'rdworkxwebsite-db') {
+      url.hostname = '192.168.10.50';
+      url.port = '55432';
+    }
+
+    return url.toString();
+  } catch {
+    return value;
+  }
+}
+
+function getDatabaseUrl() {
+  return normalizeDatabaseUrl(
+    process.env.API_DATABASE_URL
+      || process.env.LEGACY_DATABASE_URL
+      || process.env.DATABASE_URL
+  );
+}
+
 function getDb() {
-  if (!process.env.DATABASE_URL) {
+  const databaseUrl = getDatabaseUrl();
+
+  if (!databaseUrl) {
     return null;
   }
 
+  if (dbClient && dbClientUrl !== databaseUrl) {
+    dbClient.end({ timeout: 1 }).catch(() => {});
+    dbClient = undefined;
+  }
+
   if (!dbClient) {
-    dbClient = postgres(process.env.DATABASE_URL, {
+    dbClientUrl = databaseUrl;
+    dbClient = postgres(databaseUrl, {
       connect_timeout: 5,
       idle_timeout: 20,
       max: 1,
@@ -142,6 +180,7 @@ async function checkDatabaseReady() {
       body: {
         databaseReachable: result?.[0]?.ready === 1,
         databaseUrlSet: true,
+        databaseUrlSource: process.env.API_DATABASE_URL ? 'api' : process.env.LEGACY_DATABASE_URL ? 'legacy-normalized' : 'compose',
         ok: result?.[0]?.ready === 1,
         service: 'rdworkxwebsite-api'
       },
@@ -152,6 +191,7 @@ async function checkDatabaseReady() {
       category: databaseErrorCategory(error),
       databaseReachable: false,
       databaseUrlSet: true,
+      databaseUrlSource: process.env.API_DATABASE_URL ? 'api' : process.env.LEGACY_DATABASE_URL ? 'legacy-normalized' : 'compose',
       error: 'PostgreSQL is niet bereikbaar voor rdworkxwebsite-api.',
       ok: false,
       service: 'rdworkxwebsite-api'

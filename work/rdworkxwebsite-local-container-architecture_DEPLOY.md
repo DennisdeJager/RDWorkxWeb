@@ -28,6 +28,7 @@ Secretwaarden niet committen.
 Benodigd op dev-container:
 
 - `API_DATABASE_URL=postgres://rdworkxwebsite:<secret>@192.168.10.50:55432/rdworkxwebsite` of `POSTGRES_PASSWORD` voor de compose-opbouw van dezelfde URL
+- Bestaande oude `DATABASE_URL` mag blijven staan; de API krijgt deze alleen als `LEGACY_DATABASE_URL` en herschrijft host `rdworkxwebsite-db` naar `192.168.10.50:55432`.
 - `TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
 - `SMTP_HOST`
