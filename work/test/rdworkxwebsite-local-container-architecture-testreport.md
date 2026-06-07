@@ -9,7 +9,7 @@ GO voor Development-checks. Geen open bevindingen.
 - `node --check scripts\serve-web.mjs` - GO
 - `node --check scripts\api-server.mjs` - GO
 - `node --check scripts\serve-dist.mjs` - GO
-- `C:\Program Files\nodejs\npm.cmd ci --cache .npm-cache --no-audit` - GO
+- `C:\Program Files\nodejs\npm.cmd install postgres --save --cache .npm-cache --no-audit` - GO
 - `C:\Program Files\nodejs\npm.cmd run lint` - GO
 - `C:\Program Files\nodejs\npm.cmd run build` - GO
 - `docker compose config` zonder `DATABASE_URL` in runner-env - GO
@@ -21,6 +21,7 @@ GO voor Development-checks. Geen open bevindingen.
 - Webservice heeft `/health`, `/ready`, SPA fallback en `/api/*` proxy.
 - Webservice filtert hop-by-hop headers, `Content-Encoding` en `Content-Length` uit API-proxyresponses.
 - API-service heeft `/health`, `/ready`, `/api/public-config` en `/api/contact`.
+- API-service `/ready` voert een live PostgreSQL `select 1` uit en retourneert `503` als `DATABASE_URL` ontbreekt of PostgreSQL niet bereikbaar is.
 - App-compose bevat alleen `rdworkxwebsite-web` en `rdworkxwebsite-api`.
 - Data-compose bevat `rdworkxwebsite-postgres` met eigen database, user en volumes.
 
@@ -28,6 +29,7 @@ GO voor Development-checks. Geen open bevindingen.
 
 - `DATABASE_URL` staat alleen op de API-service in `compose.yml`.
 - `compose.yml` bevat geen fallback databasewachtwoord; echte DEV-runtime moet `DATABASE_URL` via `.env` krijgen.
+- PostgreSQL-client `postgres.js` wordt alleen in de API-server geïmporteerd.
 - SMTP- en Turnstile secrets staan alleen op de API-service.
 - Webservice krijgt alleen `API_INTERNAL_URL` en publieke/runtime-instellingen.
 - `.env.example` bevat placeholders en geen echte secretwaarden.

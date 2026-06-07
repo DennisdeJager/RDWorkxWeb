@@ -1,10 +1,12 @@
 import { createServer } from 'node:http';
 import nodemailer from 'nodemailer';
+import postgres from 'postgres';
 
 const host = process.env.HOST || '0.0.0.0';
 const port = Number(process.env.PORT || 5176);
 const requestLimitBytes = 16 * 1024;
 const contactRateLimit = new Map();
+let dbClient;
 
 function sendJson(res, status, body) {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8' });
@@ -85,6 +87,85 @@ function smtpConfigSummary() {
     turnstileSecretSet: Boolean(process.env.TURNSTILE_SECRET_KEY),
     turnstileSiteKeySet: Boolean(process.env.TURNSTILE_SITE_KEY || process.env.VITE_TURNSTILE_SITE_KEY)
   };
+}
+
+function getDb() {
+  if (!process.env.DATABASE_URL) {
+    return null;
+  }
+
+  if (!dbClient) {
+    dbClient = postgres(process.env.DATABASE_URL, {
+      connect_timeout: 5,
+      idle_timeout: 20,
+      max: 1,
+      max_lifetime: 60
+    });
+  }
+
+  return dbClient;
+}
+
+function databaseErrorCategory(error) {
+  const text = `${error.code || ''} ${error.errno || ''} ${error.message || ''}`;
+
+  if (/ECONNREFUSED|ETIMEDOUT|EHOSTUNREACH|ENOTFOUND|timeout|connect/i.test(text)) {
+    return 'database_connection_error';
+  }
+
+  if (/password|authentication|permission|role|28P01|42501/i.test(text)) {
+    return 'database_auth_error';
+  }
+
+  return 'database_query_error';
+}
+
+async function checkDatabaseReady() {
+  const db = getDb();
+
+  if (!db) {
+    return {
+      body: {
+        databaseReachable: false,
+        databaseUrlSet: false,
+        error: 'DATABASE_URL ontbreekt voor rdworkxwebsite-api.',
+        ok: false,
+        service: 'rdworkxwebsite-api'
+      },
+      status: 503
+    };
+  }
+
+  try {
+    const result = await db`select 1 as ready`;
+    return {
+      body: {
+        databaseReachable: result?.[0]?.ready === 1,
+        databaseUrlSet: true,
+        ok: result?.[0]?.ready === 1,
+        service: 'rdworkxwebsite-api'
+      },
+      status: result?.[0]?.ready === 1 ? 200 : 503
+    };
+  } catch (error) {
+    const body = {
+      category: databaseErrorCategory(error),
+      databaseReachable: false,
+      databaseUrlSet: true,
+      error: 'PostgreSQL is niet bereikbaar voor rdworkxwebsite-api.',
+      ok: false,
+      service: 'rdworkxwebsite-api'
+    };
+
+    if (getAppEnv() !== 'prod' && getAppEnv() !== 'production') {
+      body.detail = {
+        code: error.code || '',
+        message: redactSecretValues(error.message || '')
+      };
+    }
+
+    return { body, status: 503 };
+  }
 }
 
 function classifyServerError(error) {
@@ -343,11 +424,8 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === '/ready') {
-      sendJson(res, 200, {
-        databaseUrlSet: Boolean(process.env.DATABASE_URL),
-        ok: true,
-        service: 'rdworkxwebsite-api'
-      });
+      const readiness = await checkDatabaseReady();
+      sendJson(res, readiness.status, readiness.body);
       return;
     }
 

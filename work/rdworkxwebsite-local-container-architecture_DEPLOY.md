@@ -2,7 +2,7 @@
 
 ## Commit
 
-Implementatiecommit: 9fb66febe0c5af1610297ac7d7714f7ae0a49d7a
+Implementatiecommit: wordt na commit bijgewerkt
 
 ## Targetomgeving
 
@@ -71,6 +71,8 @@ curl http://192.168.10.12:5175/api/public-config
 curl http://192.168.10.12:5176/health
 curl http://192.168.10.12:5176/ready
 ```
+
+`/ready` van de API moet `databaseReachable:true` en `databaseUrlSet:true` tonen.
 
 ## Smoke test
 
