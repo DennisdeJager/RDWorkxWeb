@@ -32,7 +32,7 @@ Verifieer dat RD Workx Website lokaal volgens de nieuwe RD Workx architectuur dr
 
 ## Security checks
 
-- Alleen `rdworkxwebsite-api` krijgt `DATABASE_URL`.
+- Alleen `rdworkxwebsite-api` krijgt de effectieve `DATABASE_URL`; runtimeconfig gebruikt `API_DATABASE_URL` of de data-host URL opgebouwd uit `POSTGRES_PASSWORD`.
 - Alleen `rdworkxwebsite-api` krijgt SMTP- en Turnstile-secrets.
 - Webservice krijgt geen databasecredentials of server-side secrets.
 - `compose.data.yml` bindt PostgreSQL alleen op het interne local-data adres.

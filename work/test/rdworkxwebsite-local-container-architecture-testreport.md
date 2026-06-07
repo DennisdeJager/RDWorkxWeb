@@ -27,8 +27,8 @@ GO voor Development-checks. Geen open bevindingen.
 
 ## Security checks
 
-- `DATABASE_URL` staat alleen op de API-service in `compose.yml`.
-- `compose.yml` bevat geen fallback databasewachtwoord; echte DEV-runtime moet `DATABASE_URL` via `.env` krijgen.
+- De effectieve `DATABASE_URL` staat alleen op de API-service in `compose.yml`.
+- `compose.yml` negeert oude generieke `DATABASE_URL` waarden en gebruikt `API_DATABASE_URL` of de data-host URL opgebouwd uit `POSTGRES_PASSWORD`.
 - PostgreSQL-client `postgres.js` wordt alleen in de API-server geïmporteerd.
 - SMTP- en Turnstile secrets staan alleen op de API-service.
 - Webservice krijgt alleen `API_INTERNAL_URL` en publieke/runtime-instellingen.

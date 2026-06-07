@@ -32,7 +32,7 @@ services:
       PUBLIC_URL: ${PUBLIC_URL:-https://rdworkx.nl}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
-      DATABASE_URL: ${DATABASE_URL:-}
+      DATABASE_URL: ${API_DATABASE_URL:-postgres://rdworkxwebsite:${POSTGRES_PASSWORD:-}@192.168.10.50:55432/rdworkxwebsite}
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
       TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
       TURNSTILE_ALLOWED_HOSTNAMES: ${TURNSTILE_ALLOWED_HOSTNAMES:-www-dev.rdworkx.nl,rdworkx.nl,www.rdworkx.nl}

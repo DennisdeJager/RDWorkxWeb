@@ -40,7 +40,7 @@ WEB_PORT=5175
 API_BIND_ADDRESS=192.168.10.12
 API_PORT=5176
 API_INTERNAL_URL=http://api:5176
-DATABASE_URL=postgres://rdworkxwebsite:CHANGE_ME@192.168.10.50:55432/rdworkxwebsite
+API_DATABASE_URL=postgres://rdworkxwebsite:CHANGE_ME@192.168.10.50:55432/rdworkxwebsite
 POSTGRES_BIND_ADDRESS=192.168.10.50
 POSTGRES_PORT=55432
 POSTGRES_DB=rdworkxwebsite
@@ -128,7 +128,7 @@ curl http://192.168.10.12:5176/health
 - Commit geen echte `OPENAI_API_KEY`, SMTP wachtwoorden of SSH gegevens.
 - Zet productiegeheimen in `.env` op de server of in de hosting secret manager.
 - `.env.example` mag placeholders bevatten.
-- `DATABASE_URL`, `SMTP_PASS` en `TURNSTILE_SECRET_KEY` horen alleen in de API-service.
+- `API_DATABASE_URL`, `SMTP_PASS` en `TURNSTILE_SECRET_KEY` horen alleen in de API-service.
 - De webservice krijgt geen databasecredentials.
 - Controleer na deploy altijd `/health` 
 - Controleer na identity-configuratie ook `/login`, `/beheer` en `/ready`.
