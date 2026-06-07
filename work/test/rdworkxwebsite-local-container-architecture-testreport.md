@@ -12,6 +12,7 @@ GO voor Development-checks. Geen open bevindingen.
 - `C:\Program Files\nodejs\npm.cmd ci --cache .npm-cache --no-audit` - GO
 - `C:\Program Files\nodejs\npm.cmd run lint` - GO
 - `C:\Program Files\nodejs\npm.cmd run build` - GO
+- `docker compose config` zonder `DATABASE_URL` in runner-env - GO
 - `DATABASE_URL=postgres://rdworkxwebsite:placeholder@192.168.10.50:55432/rdworkxwebsite docker compose config` - GO
 - `POSTGRES_PASSWORD=placeholder docker compose -f compose.data.yml config` - GO
 
@@ -26,7 +27,7 @@ GO voor Development-checks. Geen open bevindingen.
 ## Security checks
 
 - `DATABASE_URL` staat alleen op de API-service in `compose.yml`.
-- `compose.yml` vereist expliciet `DATABASE_URL` en bevat geen fallback databasewachtwoord.
+- `compose.yml` bevat geen fallback databasewachtwoord; echte DEV-runtime moet `DATABASE_URL` via `.env` krijgen.
 - SMTP- en Turnstile secrets staan alleen op de API-service.
 - Webservice krijgt alleen `API_INTERNAL_URL` en publieke/runtime-instellingen.
 - `.env.example` bevat placeholders en geen echte secretwaarden.
